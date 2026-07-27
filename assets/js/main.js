@@ -77,7 +77,7 @@
           const direction = Number(gear.dataset.dir || 1);
           const speed = Number(gear.dataset.speed || 0.12);
           const angle = rotation * speed * direction;
-          gear.style.transform = `rotate(${angle}deg)`;
+          gear.style.setProperty('--gear-angle', `${angle}deg`);
         });
         ticking = false;
       }
@@ -159,4 +159,35 @@
       status.classList.add('is-visible');
     });
   }
+})();
+
+
+/* Mobile navigation */
+(() => {
+  const toggle = document.querySelector('.mobile-menu-toggle');
+  const menu = document.getElementById('mobileMenu');
+  if (!toggle || !menu) return;
+
+  const setOpen = (open) => {
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+    menu.hidden = !open;
+    document.body.classList.toggle('mobile-menu-open', open);
+  };
+
+  toggle.addEventListener('click', () => {
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  menu.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => setOpen(false));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') setOpen(false);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 920) setOpen(false);
+  });
 })();
